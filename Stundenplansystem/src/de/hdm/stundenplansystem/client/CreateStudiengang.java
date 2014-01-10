@@ -75,4 +75,5 @@ public class CreateStudiengang extends Content{
 				  }
 			  }
 		  });
-	  }		  
+	  }
+}

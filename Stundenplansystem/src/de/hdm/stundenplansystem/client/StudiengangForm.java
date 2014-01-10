@@ -1,130 +1,165 @@
 package de.hdm.stundenplansystem.client;
 
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-	//import com.google.gwt.user.client.rpc.AsyncCallback;
-	import com.google.gwt.user.client.ui.Button;
-	//import com.google.gwt.user.client.ui.DockLayoutPanel;
-	//import com.google.gwt.user.client.ui.Grid;
-	//import com.google.gwt.user.client.ui.HTML;
-	//import com.google.gwt.user.client.ui.HorizontalPanel;
-	//import com.google.gwt.user.client.ui.Label;
-	//import com.google.gwt.user.client.ui.RootLayoutPanel;
-	//import com.google.gwt.user.client.ui.TextBox;
-	//import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.FlexTable;
-	//import com.google.gwt.user.client.ui.Panel;
-	//import com.google.gwt.user.client.ui.RootPanel;
-	//import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextBox;
+import de.hdm.stundenplansystem.shared.*;
+import de.hdm.stundenplansystem.shared.bo.Studiengang;
 
-import de.hdm.stundenplansystem.shared.Verwaltungsklasse;
-import de.hdm.stundenplansystem.shared.VerwaltungsklasseAsync;
+/**
+ * Formular für die Darstellung des selektierten Studiengangs
+ * 
+ * @author Thies, Espich
+ *
+ */
 
-	//import de.hdm.itprojekt.client.ClientsideSettings;
-	//import de.hdm.itprojekt.shared.VerwaltungsklasseAsync;
-	//import de.hdm.itprojekt.shared.bo.Dozent;
-	//import de.hdm.itprojekt.shared.Verwaltungsklasse;
-	//import de.hdm.itprojekt.client.*;
-	//import de.hdm.itprojekt.client.gui.*;
-	
-	
-	
 public class StudiengangForm extends Content {
+	
+	private final HTML ueberschrift = new HTML ("<h2>Ãœbersicht der Studiengänge<h2>");
+	private final HTML ueberschriftAenderung = new HTML ("<h2>Studiengang bearbeiten<h2>");
 
-
-
-			/**
-			 * Aufbau der Seite, um den Raum anzuzeigen, zu lÃ¶schen und zu bearbeiten
-			 */
+	  final Label lbbezeichnung = new Label ("Bezeichnung"); 
+	  final TextBox tbbezeichnung = new TextBox ();
+	  final Button bearbeiten = new Button ("Studiengang bearbeiten");
+	  final Button loeschen = new Button ("Studiengang löschen");
+	  final Button speichern = new Button ("Änderungen speichern");
+	  			  
+	  final VerwaltungsklasseAsync verwaltungsSvc = GWT.create(Verwaltungsklasse.class);
+	  Studiengang shownSg = null; 
+	  TreeViewModel tvm = null;
+	  
+	  public StudiengangForm() {
+		  Grid studiengangGrid = new Grid (3, 2);
+		    this.add(ueberschrift);
+			this.add(studiengangGrid);
+		  
+			Label lbbezeichnung = new Label("Bezeichnung");
+			studiengangGrid.setWidget(0, 0, lbbezeichnung);
+			studiengangGrid.setWidget(0, 1, tbbezeichnung);
 			
-			//final TextBox nachnameTextBox = new TextBox();
-			//final TextBox vornameTextBox = new TextBox();
-			final FlexTable tabelleSg = new FlexTable();
-			final Button createSgButton = new Button ("Studiengang anlegen");
-			final Button changeSgButton = new Button("Studiengang bearbeiten");
-			final Button deleteSgButton = new Button("Studiengang lÃ¶schen");
-			
-			private final HTML ueberschrift = new HTML ("<h2>Ãœbersicht der StudiengÃ¤nge<h2>");
-			
-			final CreateStudiengang createSg = new CreateStudiengang();
-		//	final ChangeStudiengang changeSg = new ChangeStudiengang();
-			//final DeleteStudiengang deleteSg = new DeleteStudiengang();
-			
-			final VerwaltungsklasseAsync verwaltungsSvc = GWT.create(Verwaltungsklasse.class);			
-
-
-			
-			public void onLoad() {
-				
-				this.add(ueberschrift);
-				showWidget();
-				
-				
-			//int row = tabelleDozent.getRowCount();
-				
-				
-				tabelleSg.setText(0, 0, "Bezeichnung");
-				tabelleSg.setCellPadding(10);
-				tabelleSg.setText(0, 1, "Funktionen");
-				tabelleSg.setWidget(1, 1, deleteSgButton);
-				tabelleSg.setWidget(1, 2, changeSgButton);
-				
-				
-				createSgButton.addClickHandler(new ClickHandler() {
-					public void onClick(ClickEvent event) {
-					showCreate();
-					}
-				});
-				
-				changeSgButton.addClickHandler(new ClickHandler() {
-					public void onClick(ClickEvent event) {
-						showChange();
-					}
-				});
-				
-				/*deleteSgButton.addClickHandler(new ClickHandler() {
-					public void onClick(ClickEvent event) {
-						showDelete();
-					}
-				});*/
-				
+			Label lbfunktionen = new Label ("Funktionen");
+			studiengangGrid.setWidget(1, 0, bearbeiten);
+			studiengangGrid.setWidget(2, 0, loeschen);
 			}
-				
-			public void showWidget() {
-				
-				this.add(tabelleSg);
-				this.add(createSgButton);
-				this.add(changeSgButton);
-				this.add(deleteSgButton);
-			}
+	  
+		public void onLoad() {
 			
-			public void showCreate() {
-				this.clear();
-				this.add(createSg);
-			}
+			setTvm();
+			getSelectedData();
 			
-			public void showChange() {
-				this.clear();
-				this.add(changeSg);
-			}
-			
-			/*public void showDelete() {
-				this.clear();
-				this.add(deleteSg);
-			}*/
-			
-			/**public Studiengang updateFlexTable (Studiengang result) {
-				for (int i = 0; i < getAllStudiengang.size(); i++) { //getAllDozent wird noch als Methode oder Klasse benÃ¶tigt
-					tabelleSg.addItem(getAllStudiengang.get(i).getVorname());
-					
+			bearbeiten.addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					showWidget();
 				}
+			});
+			
+			  speichern.addClickHandler(new ClickHandler() {
+				  public void onClick(ClickEvent event) {
+
+					  boolean allFilled = true;
+					  
+					  if (tbbezeichnung.getValue().isEmpty()) {
+						  allFilled = false;
+					  Window.alert ("Bitte fÃ¼llen Sie alle Felder aus."); }
+					  
+					  if (allFilled == true) {
+						  shownSg.setBezeichnung(tbbezeichnung.getValue().trim());
+						  tbbezeichnung.setFocus(true);
+					  
+						  verwaltungsSvc.changeStudiengang(shownSg, new AsyncCallback<Studiengang> () {
+
+							  @Override
+							  public void onFailure (Throwable caught) {
+								  Window.alert("Der Studiengang konnte nicht bearbeitet werden.");
+							  }
+
+							  @Override
+							  public void onSuccess(Studiengang result) {
+								  tbbezeichnung.setText("");
+								  tvm.updateStudiengang(shownSg);
+								  Window.alert ("Erfolgreich gespeichert.");
+							  } 	
+							});
+					  }
+				  }
+				  }); 
+			
+			loeschen.addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event){
+					verwaltungsSvc.deleteStudiengang(shownSg, new AsyncCallback<Void>() {
+						  @Override
+						  public void onFailure (Throwable caught) {
+							  Window.alert("Der Studiengang konnte nicht gelöscht werden." +
+							  		"Er ist in ein oder mehreren Stundenplaneinträgen eingetragen");
+						  }
+
+						  @Override
+						  public void onSuccess(Void result) {
+							  tvm.deleteDozent(shownSg);
+							  Window.alert ("Erfolgreich gelöscht.");
+						  } 	
+						});
+				  }
+			});
+	  		this.clear();
+		  }
+
+		public void setTvm(TreeViewModel tvm) {
+			this.tvm = tvm;
+		}
+		
+		public void getSelectedData(){
+			verwaltungsSvc.getStudiengangById(id, new AsyncCallback<Studiengang>(){
+				@Override
+				public void onFailure(Throwable caught) {
+				}
+				
+				@Override
+				public void onSuccess(Studiengang result) {
+					if (result != null) {
+						setSelected(result);
+					}
+				}
+			});
+		}
+		
+		public void setSelected(Studiengang sg){
+			if (sg != null) {
+				shownSg = sg;
+				setFields();
+			} else {
+				clearFields();
 			}
-		*/
-
-	}
-
-
-
-
+		}
+		
+		public void setFields(){
+			tbbezeichnung.setText(shownSg.getBezeichnung());
+		}
+		
+		public void clearFields(){
+			tbbezeichnung.setText("");
+		}
+		
+		  public void showWidget(){
+			  	 this.add(ueberschriftAenderung);
+				  this.add(lbbezeichnung);
+				  this.add(tbbezeichnung);
+				  this.add(speichern);
+			  }
+}  
+								  
+								  
+								  
+								  
+								  
+								  
+								  
+								  
+				  

@@ -70,7 +70,7 @@ public class CreateStundenplaneintrag extends Content {
 				  hPanel.add(tblehrveranstaltung);
 				  this.add(speichern);
 				  				  
-				  verwaltungsSvc.getAllDozenten(new AsyncCallback<Vector<Dozent>>(){
+			/**	  verwaltungsSvc.getAllDozenten(new AsyncCallback<Vector<Dozent>>(){
 					  @Override
 					  public void onFailure (Throwable caught) {
 					  }
@@ -97,7 +97,7 @@ public class CreateStundenplaneintrag extends Content {
 							  i++;
 						  }
 					  }
-				  });
+				  }); */
 				  
 				  				  
 				  speichern.addClickHandler(new ClickHandler() {

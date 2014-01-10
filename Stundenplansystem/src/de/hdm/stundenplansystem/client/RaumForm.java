@@ -1,128 +1,172 @@
 package de.hdm.stundenplansystem.client;
 
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-//import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-//import com.google.gwt.user.client.ui.DockLayoutPanel;
-//import com.google.gwt.user.client.ui.Grid;
-//import com.google.gwt.user.client.ui.HTML;
-//import com.google.gwt.user.client.ui.HorizontalPanel;
-//import com.google.gwt.user.client.ui.Label;
-//import com.google.gwt.user.client.ui.RootLayoutPanel;
-//import com.google.gwt.user.client.ui.TextBox;
-//import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.FlexTable;
-//import com.google.gwt.user.client.ui.Panel;
-//import com.google.gwt.user.client.ui.RootPanel;
-//import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextBox;
+import de.hdm.stundenplansystem.shared.*;
+import de.hdm.stundenplansystem.shared.bo.Raum;
 
-import de.hdm.stundenplansystem.shared.Verwaltungsklasse;
-import de.hdm.stundenplansystem.shared.VerwaltungsklasseAsync;
-
-//import de.hdm.itprojekt.client.ClientsideSettings;
-//import de.hdm.itprojekt.shared.VerwaltungsklasseAsync;
-//import de.hdm.itprojekt.shared.bo.Dozent;
-//import de.hdm.itprojekt.shared.Verwaltungsklasse;
-//import de.hdm.itprojekt.client.*;
-//import de.hdm.itprojekt.client.gui.*;
-
-
+/**
+ * Formular für die Darstellung des selektierten Raums
+ * 
+ * @author Thies, Espich
+ *
+ */
 
 public class RaumForm extends Content {
-
-
-		/**
-		 * Aufbau der Seite, um den Raum anzuzeigen, zu lÃ¶schen und zu bearbeiten
-		 */
-		
-		private final HTML ueberschrift = new HTML ("<h2>Ãœbersicht der RÃ¤ume<h2>");
-
 	
-		final FlexTable tabelleRaum = new FlexTable();
-		final Button createRaumButton = new Button ("Raum anlegen");
-		final Button changeRaumButton = new Button("Raum bearbeiten");
-		final Button deleteRaumButton = new Button("Raum lÃ¶schen");
-		
-		final CreateRaum createRaum = new CreateRaum();
-		final ChangeRaum changeRaum = new ChangeRaum();
-		//final DeleteRaum deleteRaum = new DeleteRaum();
-		
-		final VerwaltungsklasseAsync verwaltungsSvc = GWT.create(Verwaltungsklasse.class);		
+	private final HTML ueberschrift = new HTML ("<h2>Ãœbersicht der Räume<h2>");
+	private final HTML ueberschriftAenderung = new HTML ("<h2>Raum bearbeiten<h2>");
 
+	  final Label lbbezeichnung = new Label ("Bezeichnung"); 
+	  final Label lbkapazitaet = new Label ("Kapazität");
+	  final TextBox tbbezeichnung = new TextBox ();
+	  final TextBox tbkapazitaet = new TextBox ();
+	  final Button speichern = new Button ("Änderungen speichern");
+	  final Button loeschen = new Button ("Raum löschen");
+	  final Button bearbeiten = new Button ("Raum speichern");
+	  			  
+	  final VerwaltungsklasseAsync verwaltungsSvc = GWT.create(Verwaltungsklasse.class);
+	  Raum shownRaum = null; 
+	  TreeViewModel tvm = null;
+	  
+	  public RaumForm() {
+		  Grid raumGrid = new Grid (4, 2);
+		    this.add(ueberschrift);
+			this.add(raumGrid);
+		  
+			Label lbbezeichnung = new Label("Vorname");
+			raumGrid.setWidget(0, 0, lbbezeichnung);
+			raumGrid.setWidget(0, 1, tbbezeichnung);
 
-		
+			Label lbkapazitaet = new Label("Nachname");
+			raumGrid.setWidget(1, 0, lbkapazitaet);
+			raumGrid.setWidget(1, 1, tbkapazitaet);
+			
+			Label lbfunktionen = new Label ("Funktionen");
+			raumGrid.setWidget(2, 0, bearbeiten);
+			raumGrid.setWidget(3, 0, loeschen);
+			}
+	  
 		public void onLoad() {
 			
-			this.add(ueberschrift);
-			showWidget();
-		
+			setTvm();
+			getSelectedData();
 			
-			//int row = tabelleDozent.getRowCount();
+			bearbeiten.addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					showWidget();
+				}
+			});
 			
-			
-			tabelleRaum.setText(0, 0, "Bezeichnung");
-			tabelleRaum.setCellPadding(10);
-			tabelleRaum.setText(0, 1, "KapazitÃ¤t");
-			tabelleRaum.setText(0, 2, "Funktionen");
-			tabelleRaum.setWidget(1, 2, deleteRaumButton);
-			tabelleRaum.setWidget(1, 3, changeRaumButton);
+			speichern.addClickHandler(new ClickHandler(){
+				  public void onClick(ClickEvent event) {			
 
+					  boolean allFilled = true;
+						  
+						  if (tbbezeichnung.getText().isEmpty());
+						  if (tbkapazitaet.getText().isEmpty());
+						  {	allFilled = false;
+						  Window.alert ("Bitte fÃ¼llen Sie alle Felder aus."); }
+						  
+						  if (allFilled == true) { 
+							  Raum r = new Raum();
+							  r.setBezeichnung(tbbezeichnung.getText().trim());
+							  r.setKapazitaet(tbkapazitaet.getVisibleLength());
+
+							  verwaltungsSvc.changeRaum(r, new  AsyncCallback<Raum>() {
+
+								  @Override
+								  public void onFailure (Throwable caught) {
+									  Window.alert("Der Raum konnte nicht bearbeitet werden.");
+								  }
+
+								  @Override
+								  public void onSuccess(Raum result) {
+									  
+									  tbbezeichnung.setText("");
+									  tbkapazitaet.setVisibleLength(result.getKapazitaet());
+									  tvm.updateRaum(shownRaum);
+									  Window.alert ("Erfolgreich gespeichert.");
+								  } 	
+								});
+						  }
+				  }
+				  }); 
 			
-			createRaumButton.addClickHandler(new ClickHandler() {
-				public void onClick(ClickEvent event) {
-					showCreate();
-				}
+			loeschen.addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event){
+					verwaltungsSvc.deleteRaum(shownRaum, new AsyncCallback<Void>() {
+						  @Override
+						  public void onFailure (Throwable caught) {
+							  Window.alert("Der Raum konnte nicht gelöscht werden." +
+							  		"Er ist in ein oder mehreren Stundenplaneinträgen eingetragen");
+						  }
+
+						  @Override
+						  public void onSuccess(Void result) {
+							  tvm.deleteRaum(shownRaum);
+							  Window.alert ("Erfolgreich gelöscht.");
+						  } 	
+						});
+				  }
 			});
-			
-			changeRaumButton.addClickHandler(new ClickHandler() {
-				public void onClick(ClickEvent event) {
-					showChange();
+	  		this.clear();
+		  }
+
+		public void setTvm(TreeViewModel tvm) {
+			this.tvm = tvm;
+		}
+		
+		public void getSelectedData(){
+			verwaltungsSvc.getRaumById(id, new AsyncCallback<Raum>(){
+				@Override
+				public void onFailure(Throwable caught) {
 				}
-			});
-			
-			/*deleteRaumButton.addClickHandler(new ClickHandler() {
-				public void onClick(ClickEvent event) {
-					showDelete();
-				}
-			});*/
-			
-		}
-			
-		public void showWidget() {
-			this.add(tabelleRaum);
-			this.add(createRaumButton);
-			this.add(changeRaumButton);
-			this.add(deleteRaumButton);
-		}
-		
-		public void showCreate() {
-			this.clear();
-			this.add(createRaum);
-		}
-		
-		public void showChange() {
-			this.clear();
-			this.add(changeRaum);
-		}
-		
-		/*public void showDelete() {
-			this.clear();
-			this.add(deleteRaum);
-		}*/
-		
-		
-		/**public Raum updateFlexTable (Raum result) {
-			for (int i = 0; i < getAllRaum.size(); i++) { //getAllDozent wird noch als Methode oder Klasse benÃ¶tigt
-				tabelleRaum.addItem(getAllRaum.get(i).getVorname());
 				
+				@Override
+				public void onSuccess(Raum result) {
+					if (result != null) {
+						setSelected(result);
+					}
+				}
+			});
+		}
+		
+		public void setSelected(Raum r){
+			if (r != null) {
+				shownRaum = r;
+				setFields();
+			} else {
+				clearFields();
 			}
 		}
-	*/
-
+		
+		public void setFields(){
+			tbbezeichnung.setText(shownRaum.getBezeichnung());
+			tbkapazitaet.setVisibleLength(shownRaum.getKapazitaet());
+		}
+		
+		public void clearFields(){
+			tbbezeichnung.setText("");
+			tbkapazitaet.setText("");
+		}
+		
+		  public void showWidget(){
+			  	 this.add(ueberschriftAenderung);
+				  this.add(lbbezeichnung);
+				  this.add(tbbezeichnung);
+				  this.add(lbkapazitaet);
+				  this.add(tbkapazitaet);
+				  this.add(speichern);
+			  }
 }
-
 
 
