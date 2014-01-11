@@ -58,13 +58,15 @@ public class ItProjekt implements EntryPoint {
 	/**
 	 * EntryPoint Klasse des Projekts <b>ItProjekt</b>
 	 * Diese Klasse implementiert das Interface <code>EntryPoint</code>
-	   * daher benÃ¶tigen wir die Methode <code>public void onModuleLoad()</code>. 
+	   * daher ben����tigen wir die Methode <code>public void onModuleLoad()</code>. 
 	   * Sie ist das GWT-Pendant der <code>main()</code>-Methode normaler Java-Applikationen.
 	 */
 
 	public class Stundenplansystem implements EntryPoint {
 
 		private final HTML ueberschrift = new HTML ("<h2>Herzlich Willkommen im Stundenplansystem der HdM<h2>");
+		
+		private NavTreeViewModel tvm;
 		
 		/*
 	     * Ab hier bauen wir sukzessive den Navigator mit seinen Buttons aus.
@@ -82,7 +84,7 @@ public class ItProjekt implements EntryPoint {
 		
 		@Override
 		/**
-		 * Initialisiert die Webseite, die beim Ã–ffnen als erstes angezeigt wird
+		 * Initialisiert die Webseite, die beim �����ffnen als erstes angezeigt wird
 		 */
 		public void onModuleLoad() {
 				
@@ -107,6 +109,8 @@ public class ItProjekt implements EntryPoint {
 			RootPanel.get("ItProjektFrame").add(rlp);
 			
 			detailsPanel.add(ueberschrift);
+			
+			detailsPanel.add(tvm);
 			
 			
 			/**RootLayoutPanel rlp = RootLayoutPanel.get();
@@ -140,13 +144,13 @@ public class ItProjekt implements EntryPoint {
 
 		    /*
 		     * Das DockLayoutPanel wird einem DIV-Element namens "Details" in der
-		     * zugehÃ¶rigen HTML-Datei zugewiesen und erhÃ¤lt so seinen Darstellungsort.
+		     * zugeh����rigen HTML-Datei zugewiesen und erh����lt so seinen Darstellungsort.
 		     */
 		    
 		    
 		    	    
 		    /*
-		     * Unter welchem Namen kÃ¶nnen wir den Button durch die CSS-Datei des
+		     * Unter welchem Namen k����nnen wir den Button durch die CSS-Datei des
 		     * Projekts formatieren?
 		     */
 		    dozentButton.setStylePrimaryName("BaumButton");
@@ -159,15 +163,20 @@ public class ItProjekt implements EntryPoint {
 		    stundenplanButton.setStylePrimaryName("BaumButton");
 		    raumplanButton.setStylePrimaryName("BaumButton");
 		    
+		    
+		    
+		    
+		    
+		    
 		    /*
 		     * Ab hier wird die Baumdarstellung mit den Zweigen Report, Stammdaten und Bewegungsdaten definiert
 		     */
 		    
-		    Tree uebersicht = new Tree();
+		    /*Tree uebersicht = new Tree();
 			
 		    /*
 		     * Zweig: Report mit Stundenplan und Raumplan
-		     */
+		     
 			TreeItem report = new TreeItem();
 			report.setText("Report");
 			report.addItem(stundenplanButton);
@@ -191,7 +200,7 @@ public class ItProjekt implements EntryPoint {
 			
 			/*
 			 * Zweig: Stammdaten mit Dozent, Zeitslot, Raum, Studiengang, Semesterverband, Lehrveranstaltung
-			 */
+			 
 			
 			TreeItem stammdaten = new TreeItem();
 			stammdaten.setText("Stammdaten");
@@ -254,7 +263,7 @@ public class ItProjekt implements EntryPoint {
 			
 			/*
 			 * Zweig: Bewegungsdaten mit Stundeplaneintrag
-			 */
+			 
 			
 			TreeItem bewegungsdaten = new TreeItem();
 			bewegungsdaten.setText("Bewegungsdaten");
@@ -271,13 +280,13 @@ public class ItProjekt implements EntryPoint {
 			
 			/*
 			 * Hier wird der Baum aus den drei Zweigen zusammengebaut und im Layout der Navigation zugeordnet
-			 */
+			 
 			uebersicht.addItem(report);
 			uebersicht.addItem(stammdaten);
 			uebersicht.addItem(bewegungsdaten);
 			
 
-			navigation.add(uebersicht);
+			navigation.add(uebersicht);*/
 			
 		}
 	}
@@ -291,7 +300,7 @@ public class ItProjekt implements EntryPoint {
 		    
 		    
 		    /*
-		     * HinzufÃ¼gen des Baums zum linken Panel.
+		     * Hinzuf����gen des Baums zum linken Panel.
 		     */
 
 		 
@@ -301,9 +310,9 @@ public class ItProjekt implements EntryPoint {
 		     * Um das Verhalten beim draufklicken des Buttons zu realisieren, 
 		     * haben wir einen ClickHandler verwendet, durch den durch klicken mit der Mouse auf den Button
 		     * die onClick()-Methode aufgerufen wird.
-	         * Es wurde ein separates DIV-Element namens "details" in die zugehÃ¶rige HTML-Datei eingefÃ¼gt.
-	         * Bevor der neue Showcase dort eingefÃ¼gt wird, werden zunÃ¤chst alle bisherigen
-	         * Elemente dieses DIV gelÃ¶scht.         */
+	         * Es wurde ein separates DIV-Element namens "details" in die zugeh����rige HTML-Datei eingef����gt.
+	         * Bevor der neue Showcase dort eingef����gt wird, werden zun����chst alle bisherigen
+	         * Elemente dieses DIV gel����scht.         */
 
 		
 		
@@ -313,8 +322,8 @@ public class ItProjekt implements EntryPoint {
 		    
 		    /*
 			 * Auch dem Report-Generator weisen wir dieses Bank-Objekt zu. Es wird
-			 * dort fÃ¼r die Darstellung der Adressdaten des Kreditinstituts
-			 * benÃ¶tigt.
+			 * dort f����r die Darstellung der Adressdaten des Kreditinstituts
+			 * ben����tigt.
 			 
 			ReportGeneratorAsync reportGenerator = ClientsideSettings
 					.getReportGenerator();
