@@ -63,13 +63,8 @@ public class ItProjekt implements EntryPoint {
 	 */
 
 	public class Stundenplansystem implements EntryPoint {
-		
-		/*protected String getHeadlineText() {
-			return "Herzlich Willkommen im Stundenplansystem der HdM";
-		}*/
-		
+
 		private final HTML ueberschrift = new HTML ("<h2>Herzlich Willkommen im Stundenplansystem der HdM<h2>");
-		
 		
 		/*
 	     * Ab hier bauen wir sukzessive den Navigator mit seinen Buttons aus.
@@ -104,8 +99,6 @@ public class ItProjekt implements EntryPoint {
 			
 			final VerticalPanel detailsPanel = new VerticalPanel();
 			final VerticalPanel navigation = new VerticalPanel();
-
-
 			
 			mainPanel.addNorth(new HTML("<h1>Stundenplansystem</h1>"), 100);
 			mainPanel.addWest(navigation, 400);
