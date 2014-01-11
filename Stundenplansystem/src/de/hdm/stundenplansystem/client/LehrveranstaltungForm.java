@@ -10,9 +10,8 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
-
+import de.hdm.stundenplansystem.client.NavTreeViewModel;
 import de.hdm.stundenplansystem.shared.*;
-import de.hdm.stundenplansystem.shared.bo.Dozent;
 import de.hdm.stundenplansystem.shared.bo.Lehrveranstaltung;
 
 /**
@@ -43,7 +42,7 @@ public class LehrveranstaltungForm extends Content {
 	
 	final VerwaltungsklasseAsync verwaltungsSvc = GWT.create(Verwaltungsklasse.class);
 	Lehrveranstaltung shownLv = null;
-	TreeViewModel tvm = null;	
+	NavTreeViewModel tvm = null;	
 	
 	public LehrveranstaltungForm(){
 		Grid lehrGrid = new Grid (5, 2);
@@ -138,12 +137,12 @@ public class LehrveranstaltungForm extends Content {
   		this.clear();
 	  }
 
-	public void setTvm(TreeViewModel tvm) {
+	public void setTvm(NavTreeViewModel tvm) {
 		this.tvm = tvm;
 	}
 	
 	public void getSelectedData(){
-		verwaltungsSvc.getLehrveranstaltungById(id, new AsyncCallback<Lehrveranstaltung>(){
+		verwaltungsSvc.getLehrveranstaltungById(lId, new AsyncCallback<Lehrveranstaltung>(){
 			@Override
 			public void onFailure(Throwable caught) {
 			}

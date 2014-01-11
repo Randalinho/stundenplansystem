@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Button;
 
 import de.hdm.stundenplansystem.shared.*;
 import de.hdm.stundenplansystem.shared.bo.Lehrveranstaltung;
+import de.hdm.stundenplansystem.client.NavTreeViewModel;
 
 	/**
 	 * Hier wird eine neue Lehrveranstaltung angelegt.
@@ -39,7 +40,8 @@ import de.hdm.stundenplansystem.shared.bo.Lehrveranstaltung;
 		  final Button speichern = new Button ("speichern");
 		  
 		  final VerwaltungsklasseAsync verwaltungsSvc = GWT.create(Verwaltungsklasse.class);
-
+		  NavTreeViewModel tvm = null;
+		  
 		  /**
 		  * Anordnen der Buttons und Labels auf den Panels
 		  */
@@ -81,9 +83,10 @@ import de.hdm.stundenplansystem.shared.bo.Lehrveranstaltung;
 
 								  @Override
 								  public void onSuccess(Lehrveranstaltung result) {
-									  tbbezeichnung.setValue("");
-									  tbsemester.setVisibleLength(semester);
-									  tbumfang.setVisibleLength(umfang);
+									  tbbezeichnung.setValue(result.getBezeichnung());
+									  tbsemester.setVisibleLength(result.getSemester());
+									  tbumfang.setVisibleLength(result.getUmfang());
+									  tvm.addLehrveranstaltung(result);
 									  Window.alert ("Erfolgreich gespeichert.");
 								  } 	
 						  });

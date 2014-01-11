@@ -12,6 +12,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import de.hdm.stundenplansystem.shared.*;
 import de.hdm.stundenplansystem.shared.bo.Studiengang;
+import de.hdm.stundenplansystem.client.NavTreeViewModel;
+
 
 /**
  * Formular für die Darstellung des selektierten Studiengangs
@@ -33,7 +35,7 @@ public class StudiengangForm extends Content {
 	  			  
 	  final VerwaltungsklasseAsync verwaltungsSvc = GWT.create(Verwaltungsklasse.class);
 	  Studiengang shownSg = null; 
-	  TreeViewModel tvm = null;
+	  NavTreeViewModel tvm = null;
 	  
 	  public StudiengangForm() {
 		  Grid studiengangGrid = new Grid (3, 2);
@@ -111,12 +113,12 @@ public class StudiengangForm extends Content {
 	  		this.clear();
 		  }
 
-		public void setTvm(TreeViewModel tvm) {
+		public void setTvm(NavTreeViewModel tvm) {
 			this.tvm = tvm;
 		}
 		
 		public void getSelectedData(){
-			verwaltungsSvc.getStudiengangById(id, new AsyncCallback<Studiengang>(){
+			verwaltungsSvc.getStudiengangById(sgId, new AsyncCallback<Studiengang>(){
 				@Override
 				public void onFailure(Throwable caught) {
 				}

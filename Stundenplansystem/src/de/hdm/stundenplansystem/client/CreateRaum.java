@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.Button;
 
 import de.hdm.stundenplansystem.shared.*;
 import de.hdm.stundenplansystem.shared.bo.Raum;
-
+import de.hdm.stundenplansystem.client.NavTreeViewModel;
 
 	/**
 	 * Hier wird ein neuer Raum angelegt.
@@ -38,6 +38,7 @@ import de.hdm.stundenplansystem.shared.bo.Raum;
 		  final Button speichern = new Button ("speichern");
 		  
 		  final VerwaltungsklasseAsync verwaltungsSvc = GWT.create(Verwaltungsklasse.class);
+		  NavTreeViewModel tvm = null;
 
 		  /**
 		  * Anordnen der Buttons und Labels auf den Panels
@@ -75,8 +76,9 @@ import de.hdm.stundenplansystem.shared.bo.Raum;
 
 								  @Override
 								  public void onSuccess(Raum result) {
-									  tbbezeichnung.setText("");
-									  tbkapazitaet.setVisibleLength(kapazitaet);
+									  tbbezeichnung.setText(result.getBezeichnung());
+									  tbkapazitaet.setVisibleLength(result.getKapazitaet());
+									  tvm.addRaum(result);
 									  Window.alert ("Erfolgreich gespeichert.");
 								  } 	
 								});

@@ -12,6 +12,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import de.hdm.stundenplansystem.shared.*;
 import de.hdm.stundenplansystem.shared.bo.Semesterverband;
+import de.hdm.stundenplansystem.client.NavTreeViewModel;
+
 
 /**
  * Formular für die Darstellung des selektierten Semesterverbands
@@ -39,7 +41,7 @@ public class SemesterverbandForm extends Content {
 
 	  final VerwaltungsklasseAsync verwaltungsSvc = GWT.create(Verwaltungsklasse.class);
 	  Semesterverband shownSv = null;
-	  TreeViewModel tvm = null;
+	  NavTreeViewModel tvm = null;
 	  
 	  public SemesterverbandForm() {
 		  Grid svGrid = new Grid (6, 2);
@@ -137,12 +139,12 @@ public class SemesterverbandForm extends Content {
 	  		this.clear();
 		  }
 
-		public void setTvm(TreeViewModel tvm) {
+		public void setTvm(NavTreeViewModel tvm) {
 			this.tvm = tvm;
 		}
 		
 		public void getSelectedData(){
-			verwaltungsSvc.getSemesterverbandById(id, new AsyncCallback<Semesterverband>(){
+			verwaltungsSvc.getSemesterverbandById(svId, new AsyncCallback<Semesterverband>(){
 				@Override
 				public void onFailure(Throwable caught) {
 				}

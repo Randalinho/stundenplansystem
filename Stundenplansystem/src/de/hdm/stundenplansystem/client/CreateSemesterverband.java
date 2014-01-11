@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.Button;
 
 import de.hdm.stundenplansystem.shared.*;
 import de.hdm.stundenplansystem.shared.bo.Semesterverband;
-
+import de.hdm.stundenplansystem.client.NavTreeViewModel;
 
 	/**
 	 * Hier wird ein neuer Semesterverband angelegt.
@@ -42,6 +42,7 @@ import de.hdm.stundenplansystem.shared.bo.Semesterverband;
 		  final Button speichern = new Button ("speichern");
 		  
 		  final VerwaltungsklasseAsync verwaltungsSvc = GWT.create(Verwaltungsklasse.class);
+		  NavTreeViewModel tvm = null;
 
 		  /**
 		  * Anordnen der Buttons und Labels auf den Panels
@@ -86,10 +87,11 @@ import de.hdm.stundenplansystem.shared.bo.Semesterverband;
 								  @Override
 								  public void onSuccess(Semesterverband result) {
 									  
-									  tbjahrgang.setText("");
-									  tbstudiengang.setText("");
-									  tbsemester.setVisibleLength(semester);
-									  tbanzahl.setVisibleLength(studierendenAnzahl);
+									  tbjahrgang.setText(result.getJahrgang);
+									  tbstudiengang.setText(result.getBezeichnung);
+									  tbsemester.setVisibleLength(result.getSemester);
+									  tbanzahl.setVisibleLength(result.getStudierendenAnzahl);
+									  tvm.addSemesterverband(result);
 									  Window.alert ("Erfolgreich gespeichert.");
 								  } 	
 								}); */

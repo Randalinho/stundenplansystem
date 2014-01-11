@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Button;
 
 import de.hdm.stundenplansystem.shared.*;
 import de.hdm.stundenplansystem.shared.bo.Dozent;
+import de.hdm.stundenplansystem.client.NavTreeViewModel;
 
 /**
  * Hier wird ein neuer Dozent angelegt.
@@ -37,7 +38,8 @@ public class CreateDozent extends Content {
 	  final Button speichern = new Button ("speichern");
 	  
 	  final VerwaltungsklasseAsync verwaltungsSvc = GWT.create(Verwaltungsklasse.class);
-
+	  NavTreeViewModel tvm = null;
+	  
 	  /**
 	  * Anordnen der Buttons und Labels auf den Panels
 	  */
@@ -73,8 +75,9 @@ public class CreateDozent extends Content {
 
 							  @Override
 							  public void onSuccess(Dozent result) {
-								  tbnachname.setText("");
-								  tbvorname.setText("");
+								  tbnachname.setText(result.getNachname());
+								  tbvorname.setText(result.getVorname());
+								  tvm.addDozent(result);
 								  Window.alert ("Erfolgreich gespeichert.");
 							  } 	
 							});

@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import de.hdm.stundenplansystem.shared.*;
 import de.hdm.stundenplansystem.shared.bo.Raum;
+import de.hdm.stundenplansystem.client.NavTreeViewModel;
 
 /**
  * Formular für die Darstellung des selektierten Raums
@@ -35,7 +36,7 @@ public class RaumForm extends Content {
 	  			  
 	  final VerwaltungsklasseAsync verwaltungsSvc = GWT.create(Verwaltungsklasse.class);
 	  Raum shownRaum = null; 
-	  TreeViewModel tvm = null;
+	  NavTreeViewModel tvm = null;
 	  
 	  public RaumForm() {
 		  Grid raumGrid = new Grid (4, 2);
@@ -121,12 +122,12 @@ public class RaumForm extends Content {
 	  		this.clear();
 		  }
 
-		public void setTvm(TreeViewModel tvm) {
+		public void setTvm(NavTreeViewModel tvm) {
 			this.tvm = tvm;
 		}
 		
 		public void getSelectedData(){
-			verwaltungsSvc.getRaumById(id, new AsyncCallback<Raum>(){
+			verwaltungsSvc.getRaumById(rId, new AsyncCallback<Raum>(){
 				@Override
 				public void onFailure(Throwable caught) {
 				}

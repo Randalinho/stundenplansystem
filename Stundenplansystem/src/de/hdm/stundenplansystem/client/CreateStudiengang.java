@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.Button;
 
 import de.hdm.stundenplansystem.shared.*;
 import de.hdm.stundenplansystem.shared.bo.Studiengang;
-
+import de.hdm.stundenplansystem.client.NavTreeViewModel;
 
 /**
  * Hier wird ein neuer Studiengang angelegt.
@@ -36,7 +36,8 @@ public class CreateStudiengang extends Content{
 	  final Button speichern = new Button ("speichern");
 	  
 	  final VerwaltungsklasseAsync verwaltungsSvc = GWT.create(Verwaltungsklasse.class);
-	  
+	  NavTreeViewModel tvm = null;
+  
 	  /**
 	  * Anordnen der Buttons und Labels auf den Panels
 	  */
@@ -68,7 +69,8 @@ public class CreateStudiengang extends Content{
 
 						  @Override
 						  public void onSuccess(Studiengang result) {
-							  tbbezeichnung.setValue("");
+							  tbbezeichnung.setText(result.getBezeichnung());
+							  tvm.addStudiengang(result);
 							  Window.alert ("Erfolgreich gespeichert.");
 						  } 	
 						});

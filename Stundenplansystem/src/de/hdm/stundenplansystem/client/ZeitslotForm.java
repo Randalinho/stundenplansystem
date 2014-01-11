@@ -13,7 +13,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import de.hdm.stundenplansystem.shared.*;
-import de.hdm.stundenplansystem.shared.bo.Dozent;
 import de.hdm.stundenplansystem.shared.bo.Zeitslot;
 
 /**
@@ -34,7 +33,7 @@ public class ZeitslotForm extends Content {
 	  			  
 	  final VerwaltungsklasseAsync verwaltungsSvc = GWT.create(Verwaltungsklasse.class);
 	  Zeitslot shownZeitslot = null; 
-	 // TreeViewModel tvm = null;
+	 // NavTreeViewModel tvm = null;
 	  
 	  public ZeitslotForm() {
 		  Grid zeitGrid = new Grid (6, 7);

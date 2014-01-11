@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import de.hdm.stundenplansystem.shared.*;
 import de.hdm.stundenplansystem.shared.bo.Dozent;
+import de.hdm.stundenplansystem.client.NavTreeViewModel;
 
 /**
  * Formular für die Darstellung des selektierten Kunden
@@ -35,7 +36,7 @@ public class DozentForm extends Content {
 	  			  
 	  final VerwaltungsklasseAsync verwaltungsSvc = GWT.create(Verwaltungsklasse.class);
 	  Dozent shownDozent = null; 
-	  TreeViewModel tvm = null;
+	  NavTreeViewModel tvm = null;
 	  
 	  public DozentForm() {
 		  Grid dozentGrid = new Grid (4, 2);
@@ -119,12 +120,12 @@ public class DozentForm extends Content {
 	  		this.clear();
 		  }
 
-		public void setTvm(TreeViewModel tvm) {
+		public void setTvm(NavTreeViewModel tvm) {
 			this.tvm = tvm;
 		}
 		
 		public void getSelectedData(){
-			verwaltungsSvc.getDozentById(id, new AsyncCallback<Dozent>(){
+			verwaltungsSvc.getDozentById(dId, new AsyncCallback<Dozent>(){
 				@Override
 				public void onFailure(Throwable caught) {
 				}
