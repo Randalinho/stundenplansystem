@@ -4,11 +4,12 @@ package de.hdm.stundenplansystem.client;
 //import de.hdm.itprojekt.shared.FieldVerifier;
 //import com.google.appengine.api.images.Image.Format;
 import com.google.gwt.core.client.EntryPoint;
+
 //import com.google.gwt.core.client.GWT;
 //import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+//import com.google.gwt.event.dom.client.ClickEvent;
+//import com.google.gwt.event.dom.client.ClickHandler;
 //import com.google.gwt.user.cellview.client.CellTree;
 //import com.google.gwt.user.client.Window;
 //import com.google.gwt.event.dom.client.KeyCodes;
@@ -26,13 +27,14 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 //import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 //import com.google.gwt.user.client.ui.SplitLayoutPanel;
-import com.google.gwt.user.client.ui.Tree;
-import com.google.gwt.user.client.ui.TreeItem;
+//import com.google.gwt.user.client.ui.Tree;
+//import com.google.gwt.user.client.ui.TreeItem;
 //import com.google.gwt.user.client.ui.Widget;
 //import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 
-import de.hdm.stundenplansystem.client.*;
+//import de.hdm.stundenplansystem.client.*;
+import de.hdm.stundenplansystem.shared.VerwaltungsklasseAsync;
 
 
 
@@ -64,9 +66,10 @@ public class ItProjekt implements EntryPoint {
 
 	public class Stundenplansystem implements EntryPoint {
 
+		VerwaltungsklasseAsync verwaltungsSvc = null;
+		
 		private final HTML ueberschrift = new HTML ("<h2>Herzlich Willkommen im Stundenplansystem der HdM<h2>");
 		
-		private NavTreeViewModel tvm;
 		
 		/*
 	     * Ab hier bauen wir sukzessive den Navigator mit seinen Buttons aus.
@@ -87,6 +90,8 @@ public class ItProjekt implements EntryPoint {
 		 * Initialisiert die Webseite, die beim �����ffnen als erstes angezeigt wird
 		 */
 		public void onModuleLoad() {
+			
+			
 				
 			/*
 			 * Die Anwendung besteht aus zwei seperaten horizontalen Panels. Im rechten Panel wird ein Navigationsteil 
@@ -95,6 +100,15 @@ public class ItProjekt implements EntryPoint {
 		     * Daher bietet sich ein DockLayoutPanel als Container an.
 		     *
 		     */
+			DozentForm df = new DozentForm();
+			LehrveranstaltungForm lf = new LehrveranstaltungForm();
+			RaumForm rf = new RaumForm();
+			ZeitslotForm zf = new ZeitslotForm();
+			StudiengangForm sgf = new StudiengangForm();
+			SemesterverbandForm svf = new SemesterverbandForm();
+			NavTreeViewModel tvm = new NavTreeViewModel(df, lf, rf, zf, sgf, svf);
+			
+			
 			RootLayoutPanel rlp = RootLayoutPanel.get();
 			DockLayoutPanel mainPanel = new DockLayoutPanel(Unit.PX);
 			rlp.add(mainPanel);
@@ -108,9 +122,16 @@ public class ItProjekt implements EntryPoint {
 
 			RootPanel.get("ItProjektFrame").add(rlp);
 			
+			navigation.add(tvm);
+			
 			detailsPanel.add(ueberschrift);
 			
-			detailsPanel.add(tvm);
+			detailsPanel.add(df);
+			detailsPanel.add(lf);
+			detailsPanel.add(rf);
+			detailsPanel.add(zf);
+			detailsPanel.add(svf);
+			detailsPanel.add(sgf);
 			
 			
 			/**RootLayoutPanel rlp = RootLayoutPanel.get();
