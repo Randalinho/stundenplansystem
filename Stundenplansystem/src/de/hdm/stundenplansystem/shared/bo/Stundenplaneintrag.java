@@ -13,8 +13,17 @@ public class Stundenplaneintrag extends BusinessObjekt {
 	private Zeitslot zeitslot;
 	private Semesterverband semesterverband;
 	private Studiengang studiengang;
+	public Stundenplan stundenplan;
 	
 	public Stundenplaneintrag(){
+	}
+	
+	public void setStundenplanId(int id){
+		this.stundenplan.setId(id);
+	}
+	
+	public int getStundenplanId(){
+		return this.stundenplan.getId();
 	}
 	
 	public void setDozentId(int id){
