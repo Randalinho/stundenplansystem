@@ -39,7 +39,7 @@ public class NavTreeViewModel extends Content implements TreeViewModel {
 	private DozentForm df;
 	private LehrveranstaltungForm lf;
 	private RaumForm rf;
-	//private ZeitslotForm zf;
+	private ZeitslotForm zf;
 	private SemesterverbandForm svf;
 	private StudiengangForm sgf;
 	
@@ -55,7 +55,7 @@ public class NavTreeViewModel extends Content implements TreeViewModel {
 	private ListDataProvider<Dozent> dozentDataProvider;
 	private ListDataProvider<Lehrveranstaltung> lvDataProvider;
 	private ListDataProvider<Raum> raumDataProvider;
-	//private ListDataProvider<Zeitslot> zsDataProvider;
+	private ListDataProvider<Zeitslot> zsDataProvider;
 	private ListDataProvider<Semesterverband> svDataProvider;
 	private ListDataProvider<Studiengang> sgDataProvider;
 	//private Map<Dozent, ListDataProvider<Lehrveranstaltung>> lvDataProvider = new HashMap<Dozent, ListDataProvider<Lehrveranstaltung>>();
@@ -277,27 +277,27 @@ public class NavTreeViewModel extends Content implements TreeViewModel {
 	
 
 	
-	void removeDozent(Dozent dozent) {
+	void deleteDozent(Dozent dozent) {
 		dozentDataProvider.getList().remove(dozent);
 		//lvDataProvider.remove(dozent);
 	}
 	
-	void removeRaum(Raum raum) {
+	void deleteRaum(Raum raum) {
 		raumDataProvider.getList().remove(raum);
 		//lvDataProvider.remove(dozent);
 	}
 	
-	void removeLehrveranstaltung(Lehrveranstaltung lehrveranstaltung) {
+	void deleteLehrveranstaltung(Lehrveranstaltung lehrveranstaltung) {
 		lvDataProvider.getList().remove(lehrveranstaltung);
 		//lvDataProvider.remove(dozent);
 	}
 	
-	void removeStudiengang(Studiengang studiengang) {
+	void deleteStudiengang(Studiengang studiengang) {
 		sgDataProvider.getList().remove(studiengang);
 		//lvDataProvider.remove(dozent);
 	}
 	
-	void removeSemesterverband(Semesterverband semesterverband) {
+	void deleteSemesterverband(Semesterverband semesterverband) {
 		svDataProvider.getList().remove(semesterverband);
 		//lvDataProvider.remove(dozent);
 	}
@@ -305,7 +305,7 @@ public class NavTreeViewModel extends Content implements TreeViewModel {
 
 	@Override
 	public <T> NodeInfo<?> getNodeInfo(T value) {
-		if (value instanceof String) {
+		if (value instanceof Dozent) {
 			dozentDataProvider = new ListDataProvider<Dozent>();
 			verwaltungsSvc.getAllDozenten(new AsyncCallback<Vector<Dozent>>() {
 				public void onFailure(Throwable T) {
@@ -324,26 +324,89 @@ public class NavTreeViewModel extends Content implements TreeViewModel {
 		
 		
 		
-		/*if (value instanceof Dozent) {
-			// Erzeugen eines ListDataproviders für Account-Daten
-			final ListDataProvider<Lehrveranstaltung> lvProvider = new ListDataProvider<Lehrveranstaltung>();
-			lvDataProvider.put((Dozent) value, lvProvider);
-
-			verwaltungsSvc.getLvOf((Dozent) value,
-					new AsyncCallback<Vector<Lehrveranstaltung>>() {
-						public void onFailure(Throwable t) {
-						}
-
-						public void onSuccess(Vector<Lehrveranstaltung> lvs) {
-							for (Lehrveranstaltung lv : lvs) {
-								lvProvider.getList().add(lv);
-							}
-						}
-					});
-
-			// Return a node info that pairs the data with a cell.
-			return new DefaultNodeInfo<Lehrveranstaltung>(lvProvider,
-					new LvCell(), selectionModel, null);
+		if (value instanceof Lehrveranstaltung) {
+			lvDataProvider = new ListDataProvider<Lehrveranstaltung>();
+			verwaltungsSvc.getAllLehrveranstaltungen(new AsyncCallback<Vector<Lehrveranstaltung>>() {
+				public void onFailure(Throwable T) {
+					
+				}
+				
+				public void onSuccess(Vector<Lehrveranstaltung> lehrveranstaltungen) {
+					for (Lehrveranstaltung lv : lehrveranstaltungen) {
+						lvDataProvider.getList().add(lv);
+					}
+				}
+			});
+			
+			return new DefaultNodeInfo<Lehrveranstaltung>(lvDataProvider, new LehrveranstaltungCell(), selectionModel, null);
+		}
+		
+		if (value instanceof Raum) {
+			raumDataProvider = new ListDataProvider<Raum>();
+			verwaltungsSvc.getAllRaeume(new AsyncCallback<Vector<Raum>>() {
+				public void onFailure(Throwable T) {
+					
+				}
+				
+				public void onSuccess(Vector<Raum> raeume) {
+					for (Raum r : raeume) {
+						raumDataProvider.getList().add(r);
+					}
+				}
+			});
+			
+			return new DefaultNodeInfo<Raum>(raumDataProvider, new RaumCell(), selectionModel, null);
+		}
+		
+		if (value instanceof Semesterverband) {
+			svDataProvider = new ListDataProvider<Semesterverband>();
+			verwaltungsSvc.getAllSemesterverbaende(new AsyncCallback<Vector<Semesterverband>>() {
+				public void onFailure(Throwable T) {
+					
+				}
+				
+				public void onSuccess(Vector<Semesterverband> semesterverbaende) {
+					for (Semesterverband sv : semesterverbaende) {
+						svDataProvider.getList().add(sv);
+					}
+				}
+			});
+			
+			return new DefaultNodeInfo<Semesterverband>(svDataProvider, new SemesterverbandCell(), selectionModel, null);
+		}
+		
+		if (value instanceof Studiengang) {
+			sgDataProvider = new ListDataProvider<Studiengang>();
+			verwaltungsSvc.getAllStudiengaenge(new AsyncCallback<Vector<Studiengang>>() {
+				public void onFailure(Throwable T) {
+					
+				}
+				
+				public void onSuccess(Vector<Studiengang> studiengaenge) {
+					for (Studiengang sg : studiengaenge) {
+						sgDataProvider.getList().add(sg);
+					}
+				}
+			});
+			
+			return new DefaultNodeInfo<Studiengang>(sgDataProvider, new StudiengangCell(), selectionModel, null);
+		}
+		
+		/*if (value instanceof Zeitslot) {
+			zsDataProvider = new ListDataProvider<Zeitslot>();
+			verwaltungsSvc.getAllZeitslots(new AsyncCallback<Vector<Zeitslot>>() {
+				public void onFailure(Throwable T) {
+					
+				}
+				
+				public void onSuccess(Vector<Zeitslot> zeitslots) {
+					for (Zeitslot zs : zeitslots) {
+						zsDataProvider.getList().add(zs);
+					}
+				}
+			});
+			
+			return new DefaultNodeInfo<Zeitslot>(zsDataProvider, new ZeitslotCell(), selectionModel, null);
 		}*/
 		
 		
